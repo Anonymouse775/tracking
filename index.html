@@ -2,42 +2,48 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Pelacak Orang</title>
+  <title>Pengirim Lokasi</title>
   <style>
     body {
-      margin: 0;
-      overflow: hidden;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
       background: #d0f0fd;
-      position: relative;
+      padding-top: 50px;
     }
-    #icon {
-      width: 50px;
-      height: 50px;
-      position: absolute;
-      background: url('https://cdn-icons-png.flaticon.com/512/847/847969.png') no-repeat center center;
-      background-size: contain;
-      pointer-events: none;
-      transition: all 0.05s linear;
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-  <div id="icon"></div>
+  <h1>Sharing Lokasi...</h1>
+  <div id="status">Mengambil lokasi...</div>
 
   <script>
-    const icon = document.getElementById('icon');
-    const channel = new BroadcastChannel('tracker_channel');
+    const statusDiv = document.getElementById('status');
+    const channel = new BroadcastChannel('gps_channel');
 
-    document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      icon.style.left = (x - 25) + 'px';
-      icon.style.top = (y - 25) + 'px';
-      
-      // Broadcast posisi ke semua tab lain
-      channel.postMessage({ x, y });
-    });
+    function success(position) {
+      const { latitude, longitude } = position.coords;
+      statusDiv.textContent = 'Latitude: ${latitude.toFixed(6)}, Longitude: ${longitude.toFixed(6)}';
+
+      // Broadcast posisi ke monitor.html
+      channel.postMessage({ latitude, longitude });
+    }
+
+    function error(err) {
+      statusDiv.textContent = 'Gagal mengambil lokasi: ' + err.message;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(success, error, {
+        enableHighAccuracy: true,
+        maximumAge: 1000
+      });
+    } else {
+      statusDiv.textContent = 'Geolocation tidak didukung browser.';
+    }
   </script>
 </body>
 </html>
