@@ -1,49 +1,16 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pengirim Lokasi</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #d0f0fd;
-      padding-top: 50px;
-    }
-    #status {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pelacak Lokasi</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h1>Sharing Lokasi...</h1>
-  <div id="status">Mengambil lokasi...</div>
-
-  <script>
-    const statusDiv = document.getElementById('status');
-    const channel = new BroadcastChannel('gps_channel');
-
-    function success(position) {
-      const { latitude, longitude } = position.coords;
-      statusDiv.textContent = 'Latitude: ${latitude.toFixed(6)}, Longitude: ${longitude.toFixed(6)}';
-
-      // Broadcast posisi ke monitor.html
-      channel.postMessage({ latitude, longitude });
-    }
-
-    function error(err) {
-      statusDiv.textContent = 'Gagal mengambil lokasi: ' + err.message;
-    }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, error, {
-        enableHighAccuracy: true,
-        maximumAge: 1000
-      });
-    } else {
-      statusDiv.textContent = 'Geolocation tidak didukung browser.';
-    }
-  </script>
+  <h1>Pelacak Lokasi</h1>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
