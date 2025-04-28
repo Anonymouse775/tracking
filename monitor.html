@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitor Orang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      padding: 20px;
+    }
+    #position {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monitoring Pergerakan</h1>
+  <div id="position">Menunggu pergerakan...</div>
+
+  <script>
+    const position = document.getElementById('position');
+    const channel = new BroadcastChannel('tracker_channel');
+
+    channel.onmessage = (event) => {
+      const { x, y } = event.data;
+      position.textContent = 'Posisi Terkini: X = ${x}, Y = ${y}';
+    };
+  </script>
+</body>
+</html>

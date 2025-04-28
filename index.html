@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pelacak Orang</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background: #d0f0fd;
+      position: relative;
+    }
+    #icon {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      background: url('https://cdn-icons-png.flaticon.com/512/847/847969.png') no-repeat center center;
+      background-size: contain;
+      pointer-events: none;
+      transition: all 0.05s linear;
+    }
+  </style>
+</head>
+<body>
+  <div id="icon"></div>
+
+  <script>
+    const icon = document.getElementById('icon');
+    const channel = new BroadcastChannel('tracker_channel');
+
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      icon.style.left = (x - 25) + 'px';
+      icon.style.top = (y - 25) + 'px';
+      
+      // Broadcast posisi ke semua tab lain
+      channel.postMessage({ x, y });
+    });
+  </script>
+</body>
+</html>
